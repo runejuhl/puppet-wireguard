@@ -1,5 +1,5 @@
 # puppet-wireguard
-[//]: # ([![Build Status](https://travis-ci.org/flokli/puppet-wireguard.svg?branch=master)](https://travis-ci.org/flokli/puppet-wireguard))
+
 
 This module manages wireguard tunnels see https://www.wireguard.com/ and man wg(8)
 for details.
