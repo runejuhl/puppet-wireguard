@@ -12,7 +12,7 @@ for details.
 
 ## General
  The module
- - Manages tunnels config files in the /etc/wiregurad directory.
+ - Manages tunnel config files in the /etc/wiregurad directory.
  - Manages systemd service definitions wg-quick@
 
 ## Examples
