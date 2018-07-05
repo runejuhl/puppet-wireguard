@@ -43,6 +43,25 @@ class wireguard::packages (
       }
     }
   }
+  elsif $facts['osfamily'] == 'RedHat' {
+    $os_version=$facts['os']['release']['major'] + 0
+    if $os_version >= 7 {
+      yumrepo { 'wireguard':
+        baseurl  => 'https://copr-be.cloud.fedoraproject.org/results/jdoss/wireguard/epel-7-$basearch/',
+        descr    => 'Copr repo for wireguard owned by jdoss',
+        enabled  => '1',
+        gpgcheck => '1',
+        gpgkey   => 'https://copr-be.cloud.fedoraproject.org/results/jdoss/wireguard/pubkey.gpg',
+      }
+
+      package { 'epel-release':
+        ensure => installed,
+      }
+    }
+    else {
+        fail ('Incorrect OS Version, 7 or greater required')
+      }
+  }
 
   unless $tools_only {
     package { 'wireguard-dkms':
@@ -64,11 +83,4 @@ class wireguard::packages (
     require => Package['wireguard-tools'],
   }
 
-  file { '/etc/systemd/system/wireguard@.service':
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    source => 'puppet:///modules/wireguard/wireguard@.service',
-  }
 }

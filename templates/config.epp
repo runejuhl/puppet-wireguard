@@ -1,11 +1,22 @@
 <%- | String $private_key,
       Integer $listen_port,
+      String $listen_address,
+      Boolean $save_config,
+      Optional[String] $dns_servers,
+      Optional[String]  $preup,
+      Optional[String]  $postup,
+      Optional[String]  $predown,
+      Optional[String]  $postdown,
+      Optional[Integer]  $mtu,
+      Optional[Integer]  $fwmark = undef,
+      Optional[String]   $table = undef,
       Array[Struct[
         {
-          public_key => String,
-          endpoint => Optional[String],
-          allowed_ips => Optional[String],
-          preshared_key => Optional[String],
+          public_key           => String,
+          endpoint             => Optional[String],
+          allowed_ips          => Optional[String],
+          preshared_key        => Optional[String],
+          comment              => Optional[String],
           persistent_keepalive => Optional[Integer[0-65535]],
         }
       ]] $peers = []
@@ -14,9 +25,39 @@
 [Interface]
 PrivateKey = <%= $private_key %>
 ListenPort = <%= $listen_port %>
-
+Address = <%= $listen_address %>
+<% if $save_config { -%>
+SaveConfig = <%= $save_config %>
+<%} -%>
+<% if $dns_servers { -%>
+DNS = <%= $dns_servers %>
+<%} -%>
+<% if $preup { -%>
+PreUp = <%= $preup %>
+<%} -%>
+<% if $postup { -%>
+postUp = <%= $postup %>
+<%} -%>
+<% if $predown { -%>
+PreDown = <%= $predown%>
+<%} -%>
+<% if $postdown { -%>
+PostDown = <%= $postdown %>
+<%} -%>
+<% if $mtu { -%>
+mtu = <%= $mtu %>
+<%} -%>
+<% if $table { -%>
+table = <%= $table %>
+<%} -%>
+<% if $fwmark { -%>
+fwmark = <%= $fwmark %>
+<%} -%>
 <% $peers.each |$peer| { -%>
 [Peer]
+<% if $peer['comment'] { -%>
+#<%= $peer['comment'] %>
+<% } -%>
 PublicKey = <%= $peer['public_key'] %>
 <% if $peer['preshared_key'] { -%>
 PresharedKey = <%= $peer['preshared_key'] %>
