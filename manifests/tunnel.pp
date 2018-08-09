@@ -8,7 +8,7 @@
 # [*private_key*]
 # String - the private key for the tunnel interface
 #
-# [*listen_address*]
+# [*address*]
 # String - Interface address.
 #
 # [*listen_port*] (optional)
@@ -83,7 +83,7 @@
 define wireguard::tunnel (
   String  $private_key,
   Integer $listen_port,
-  String  $listen_address,
+  String  $address,
   Optional[String]   $dns_servers = undef,
   Optional[String]   $preup_command = undef,
   Optional[String]   $postup_command = undef,
@@ -123,7 +123,7 @@ define wireguard::tunnel (
       content => epp('wireguard/config.epp', {
         private_key    => $private_key,
         listen_port    => $listen_port,
-        listen_address => $listen_address,
+        address => $address,
         save_config    => $save_config,
         dns_servers    => $dns_servers,
         preup          => $preup_command,

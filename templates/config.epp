@@ -1,6 +1,6 @@
 <%- | String $private_key,
       Integer $listen_port,
-      String $listen_address,
+      String $address,
       Boolean $save_config,
       Optional[String] $dns_servers,
       Optional[String]  $preup,
@@ -25,7 +25,7 @@
 [Interface]
 PrivateKey = <%= $private_key %>
 ListenPort = <%= $listen_port %>
-Address = <%= $listen_address %>
+Address = <%= $address %>
 <% if $save_config { -%>
 SaveConfig = <%= $save_config %>
 <%} -%>
