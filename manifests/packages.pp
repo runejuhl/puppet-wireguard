@@ -33,7 +33,7 @@ class wireguard::packages (
       default : {
         apt::pin {'wireguard':
           packages => ['wireguard-dkms', 'wireguard-tools'],
-          release  => 'experimental',
+          release  => 'unstable',
           priority => 501,
           require  => Apt::Source['debian_unstable'],
         }
