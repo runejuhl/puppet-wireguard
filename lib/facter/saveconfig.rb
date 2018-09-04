@@ -6,17 +6,10 @@ should update a particular file.
 =end
 Facter.add(:wireguard_saveconfig_custom) do
   setcode do
-    saveconfig = {}
-    Dir.glob('/etc/wireguard/*.conf') do |conf_file|
-      varname=File.basename(conf_file,".conf")
-      if File.readlines(conf_file).grep(/\A.*#.*SaveConfig/i).size >0
-        saveconfig[varname]=false
-      else
-        if File.readlines(conf_file).grep(/SaveConfig/i).size >0
-          saveconfig[varname]=true
-        end
-      end
+    Dir.glob('/etc/wireguard/*.conf').reduce({})  do |acc, conf_file|
+      varname=File.basename(conf_file, '.conf')
+      acc[varname] = !File.readlines(conf_file).grep(/^ *SaveConfig *= *true/i).empty?
+      acc
     end
-    saveconfig
   end
 end
