@@ -8,59 +8,64 @@ class wireguard::packages (
   # kernel modules and hence doesn't need the dkms packages
   Boolean $tools_only = false,
 ) {
-  if $facts['osfamily'] == 'debian' {
-    include apt
+  case $facts['osfamily'] {
+    'debian': {
+      include apt
 
-    $osname = $facts['os']['name']
+      $osname = $facts['os']['name']
 
-    case $osname {
-      'ubuntu' : {
-        apt::source { 'wireguard' :
-          location => "http://ppa.launchpad.net/wireguard/wireguard/${osname}",
-          release  => $facts['lsbdistcodename'],
-          repos    => 'main',
-          key      => {
-            'id'     => 'E1B39B6EF6DDB96564797591AE33835F504A1A25',
-            'server' => 'pgp.mit.edu',
-          },
-          include  => {
-            'src' => false,
-          },
+      case $osname {
+        'ubuntu' : {
+          apt::source { 'wireguard' :
+            location => "http://ppa.launchpad.net/wireguard/wireguard/${osname}",
+            release  => $facts['lsbdistcodename'],
+            repos    => 'main',
+            key      => {
+              'id'     => 'E1B39B6EF6DDB96564797591AE33835F504A1A25',
+              'server' => 'pgp.mit.edu',
+            },
+            include  => {
+              'src' => false,
+            },
+          }
+          [Apt::Source['wireguard'], Class['apt::update']] -> Package<| title == 'wireguard-tools' |>
+          [Apt::Source['wireguard'], Class['apt::update']] -> Package<| title == 'wireguard-dkms' |>
         }
-        [Apt::Source['wireguard'], Class['apt::update']] -> Package<| title == 'wireguard-tools' |>
-        [Apt::Source['wireguard'], Class['apt::update']] -> Package<| title == 'wireguard-dkms' |>
-      }
-      default : {
-        apt::pin {'wireguard':
-          packages => ['wireguard-dkms', 'wireguard-tools'],
-          release  => 'unstable',
-          priority => 501,
-          require  => Apt::Source['debian_unstable'],
-        }
+        'debian' : {
+          apt::pin {'wireguard':
+            packages => ['wireguard-dkms', 'wireguard-tools'],
+            release  => 'unstable',
+            priority => 501,
+            require  => Apt::Source['debian_unstable'],
+          }
 
-        [Apt::Pin['wireguard'], Class['apt::update']] -> Package<| title == 'wireguard-dkms' |>
-        [Apt::Pin['wireguard'], Class['apt::update']] -> Package<| title == 'wireguard-tools' |>
+          [Apt::Pin['wireguard'], Class['apt::update']] -> Package<| title == 'wireguard-dkms' |>
+          [Apt::Pin['wireguard'], Class['apt::update']] -> Package<| title == 'wireguard-tools' |>
+        }
+        default: {
+          fail('Unsupported distribution')
+        }
       }
     }
-  }
-  elsif $facts['osfamily'] == 'RedHat' {
-    $os_version=$facts['os']['release']['major'] + 0
-    if $os_version >= 7 {
-      yumrepo { 'wireguard':
-        baseurl  => 'https://copr-be.cloud.fedoraproject.org/results/jdoss/wireguard/epel-7-$basearch/',
-        descr    => 'Copr repo for wireguard owned by jdoss',
-        enabled  => '1',
-        gpgcheck => '1',
-        gpgkey   => 'https://copr-be.cloud.fedoraproject.org/results/jdoss/wireguard/pubkey.gpg',
-      }
+    'RedHat': {
+      $os_version=$facts['os']['release']['major'] + 0
+      if $os_version >= 7 {
+        yumrepo { 'wireguard':
+          baseurl  => 'https://copr-be.cloud.fedoraproject.org/results/jdoss/wireguard/epel-7-$basearch/',
+          descr    => 'Copr repo for wireguard owned by jdoss',
+          enabled  => '1',
+          gpgcheck => '1',
+          gpgkey   => 'https://copr-be.cloud.fedoraproject.org/results/jdoss/wireguard/pubkey.gpg',
+        }
 
-      package { 'epel-release':
-        ensure => installed,
+        package { 'epel-release':
+          ensure => installed,
+        }
       }
     }
-    else {
-        fail ('Incorrect OS Version, 7 or greater required')
-      }
+    default: {
+      fail ('Unsupported OS/distribution')
+    }
   }
 
   unless $tools_only {
