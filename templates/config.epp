@@ -1,36 +1,38 @@
-<%- | String            $private_key,
-      Integer           $listen_port,
-      String            $address,
-      Boolean           $save_config,
-      Optional[String]  $dns_servers,
-      Optional[String]  $preup,
-      Optional[String]  $postup,
-      Optional[String]  $predown,
-      Optional[String]  $postdown,
-      Optional[Integer] $mtu,
-      Optional[Integer] $fwmark = undef,
-      Optional[String]  $table  = undef,
+<%- | Wireguard::Base64                    $private_key,
+      Stdlib::Host                         $address,
+      Boolean                              $save_config,
+      Optional[Tea::Port]                  $listen_port,
+      Optional[Array[Stdlib::IP::Address]] $dns_servers,
+      Optional[String]                     $preup,
+      Optional[String]                     $postup,
+      Optional[String]                     $predown,
+      Optional[String]                     $postdown,
+      Optional[Integer[0,default]]         $mtu,
+      Optional[Integer[0,4294967295]]      $fwmark = undef,
+      Optional[String]                     $table  = undef,
       Array[Struct[
         {
-          public_key           => String,
+          public_key           => Wireguard::Base64,
           endpoint             => Optional[String],
-          allowed_ips          => Optional[String],
+          allowed_ips          => Optional[Array[Wireguard::CIDR]],
           preshared_key        => Optional[String],
           comment              => Optional[String],
           persistent_keepalive => Optional[Integer[0-65535]],
         }
-      ]]                $peers  = []
+      ]]                                   $peers  = []
 | -%>
 
 [Interface]
 PrivateKey = <%= $private_key %>
+<% if $listen_port { -%>
 ListenPort = <%= $listen_port %>
+<%} -%>
 Address = <%= $address %>
 <% if $save_config { -%>
 SaveConfig = <%= $save_config %>
 <%} -%>
 <% if $dns_servers { -%>
-DNS = <%= $dns_servers %>
+DNS = <%= $dns_servers.join(', ') %>
 <%} -%>
 <% if $preup { -%>
 PreUp = <%= $preup %>
@@ -62,7 +64,7 @@ PublicKey = <%= $peer['public_key'] %>
 <% if $peer['preshared_key'] { -%>
 PresharedKey = <%= $peer['preshared_key'] %>
 <% } -%>
-AllowedIPs = <%= $peer['allowed_ips'] %>
+AllowedIPs = <%= $peer['allowed_ips'].join(', ') %>
 <% if $peer['endpoint'] { -%>
 Endpoint = <%= $peer['endpoint'] %>
 <% } -%>

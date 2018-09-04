@@ -8,7 +8,7 @@
 #
 # @param peer_public_key The public key of the one and only peer @param
 #
-# @param peer_allowed_ips A comma-separated list of ip (v4 or v6) addresses with CIDR
+# @param peer_allowed_ips An array of IP (v4 or v6) addresses with CIDR
 # masks from which this peer is allowed to send incoming traffic and to which
 # outgoing traffic for this peer is directed. Defaults to 0.0.0.0/0 and ::/0.
 #
@@ -18,13 +18,13 @@
 # peer. Optional.
 
 define wireguard::simple_tunnel (
-  String           $private_key,
-  Integer          $listen_port,
-  String           $peer_public_key,
-  String           $ensure           = 'present',
-  Optional[String] $address          = undef,
-  Optional[String] $peer_allowed_ips = undef,
-  Optional[String] $peer_endpoint    = undef,
+  Wireguard::Base64                $private_key,
+  Tea::Port                        $listen_port,
+  Wireguard::Base64                $peer_public_key,
+  Enum['present','absent']         $ensure           = 'present',
+  Optional[Stdlib::Host]           $address          = undef,
+  Optional[Array[Wireguard::CIDR]] $peer_allowed_ips = undef,
+  Optional[String]                 $peer_endpoint    = undef,
 ) {
 
   wireguard::tunnel { $title:

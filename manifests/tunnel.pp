@@ -61,9 +61,9 @@
 #         String - Pblic key of the peer.
 #
 #         [allowed_ips] (optional)
-#         String - a comma-separated list of IPv4 / IPv6 addresses with CIDR
-#                  masks from which incoming traffic for this peer is allowed
-#                  and to which outgoing traffic for this peer is directed.
+#         Array - an array of IPv4 / IPv6 addresses with CIDR masks from which
+#                 incoming traffic for this peer is allowed and to which
+#                 outgoing traffic for this peer is directed.
 #
 #         [*endpoint*] (optional)
 #         String - An endpoint IP or hostname, followed by a colon, and then
@@ -81,29 +81,29 @@
 #         Integer - a seconds interval, between 1 and 65535 inclusive default 25
 #
 define wireguard::tunnel (
-  String                   $private_key,
-  Integer                  $listen_port,
-  String                   $address,
-  Optional[String]         $dns_servers      = undef,
-  Optional[String]         $preup_command    = undef,
-  Optional[String]         $postup_command   = undef,
-  Optional[String]         $predown_command  = undef,
-  Optional[String]         $postdown_command = undef,
-  Optional[Integer]        $mtu              = undef,
-  Optional[Integer]        $fwmark           = undef,
-  Optional[String]         $table            = undef,
-  Boolean                  $save_config      = false,
-  Enum['present','absent'] $ensure           = 'present',
+  Wireguard::Base64                    $private_key,
+  Stdlib::Host                         $address,
+  Optional[Tea::Port]                  $listen_port      = undef,
+  Optional[Array[Stdlib::IP::Address]] $dns_servers      = undef,
+  Optional[String]                     $preup_command    = undef,
+  Optional[String]                     $postup_command   = undef,
+  Optional[String]                     $predown_command  = undef,
+  Optional[String]                     $postdown_command = undef,
+  Optional[Integer[0,default]]         $mtu              = undef,
+  Optional[Integer]                    $fwmark           = undef,
+  Optional[String]                     $table            = undef,
+  Boolean                              $save_config      = false,
+  Enum['present','absent']             $ensure           = 'present',
   Hash[String, Struct[
     {
-      public_key           => String,
+      public_key           => Wireguard::Base64,
       endpoint             => Optional[String],
-      allowed_ips          => Optional[String],
+      allowed_ips          => Optional[Array[Wireguard::CIDR]],
       preshared_key        => Optional[String],
       comment              => Optional[String],
       persistent_keepalive => Optional[Integer[0-65535]],
     }
-  ]]                       $peers            = {},
+  ]]                                   $peers            = {},
 ) {
 
   include wireguard::packages
@@ -117,7 +117,7 @@ define wireguard::tunnel (
   # It makes no sense to update a config file it contains the SaveConfig
   # directive so do nothing if this is the case, except if we are explicityly
   # removing the directive.
-  unless $facts[wireguard_saveconfig_custom]["${title}"] and $save_config {
+  unless $facts.dig('wireguard_saveconfig_custom', $title) and $save_config {
     file { "/etc/wireguard/${title}.conf":
       ensure  => $ensure,
       content => epp('wireguard/config.epp', {
@@ -144,13 +144,13 @@ define wireguard::tunnel (
           }
         },
       }),
-      notify  => Service["wg-quick@${title}.service"],
-    }
-    service { "wg-quick@${title}.service":
-      ensure  => if $ensure { 'running' } else { 'stopped' },
-      enable  => if $ensure { true } else { false },
-      require => File["/etc/wireguard/${title}.conf"],
-    }
+                    notify  => Service["wg-quick@${title}.service"],
+                    }
+                    service { "wg-quick@${title}.service":
+                    ensure  => if $ensure { 'running' } else { 'stopped' },
+                    enable  => if $ensure { true } else { false },
+                    require => File["/etc/wireguard/${title}.conf"],
+                    }
   }
   else {
     file { "/etc/wireguard/${title}.conf":
