@@ -81,19 +81,19 @@
 #         Integer - a seconds interval, between 1 and 65535 inclusive default 25
 #
 define wireguard::tunnel (
-  String  $private_key,
-  Integer $listen_port,
-  String  $address,
-  Optional[String]   $dns_servers = undef,
-  Optional[String]   $preup_command = undef,
-  Optional[String]   $postup_command = undef,
-  Optional[String]   $predown_command = undef,
-  Optional[String]   $postdown_command =undef,
-  Optional[Integer]  $mtu = undef,
-  Optional[Integer]  $fwmark = undef,
-  Optional[String]   $table = undef,
-  Boolean $save_config = false,
-  Enum['present','absent'] $ensure = 'present',
+  String                   $private_key,
+  Integer                  $listen_port,
+  String                   $address,
+  Optional[String]         $dns_servers      = undef,
+  Optional[String]         $preup_command    = undef,
+  Optional[String]         $postup_command   = undef,
+  Optional[String]         $predown_command  = undef,
+  Optional[String]         $postdown_command = undef,
+  Optional[Integer]        $mtu              = undef,
+  Optional[Integer]        $fwmark           = undef,
+  Optional[String]         $table            = undef,
+  Boolean                  $save_config      = false,
+  Enum['present','absent'] $ensure           = 'present',
   Hash[String, Struct[
     {
       public_key           => String,
@@ -103,7 +103,7 @@ define wireguard::tunnel (
       comment              => Optional[String],
       persistent_keepalive => Optional[Integer[0-65535]],
     }
-  ]] $peers = {},
+  ]]                       $peers            = {},
 ) {
 
   include wireguard::packages
@@ -114,26 +114,26 @@ define wireguard::tunnel (
     }
   }
 
-  # It makes no sense to update a confit file it contains the SaveConfig
+  # It makes no sense to update a config file it contains the SaveConfig
   # directive so do nothing if this is the case, except if we are explicityly
   # removing the directive.
-  unless  $facts[wireguard_saveconfig_custom]["${title}"] and $save_config {
+  unless $facts[wireguard_saveconfig_custom]["${title}"] and $save_config {
     file { "/etc/wireguard/${title}.conf":
       ensure  => $ensure,
       content => epp('wireguard/config.epp', {
-        private_key    => $private_key,
-        listen_port    => $listen_port,
-        address => $address,
-        save_config    => $save_config,
-        dns_servers    => $dns_servers,
-        preup          => $preup_command,
-        postup         => $postup_command,
-        predown        => $predown_command,
-        postdown       => $postdown_command,
-        mtu            => $mtu,
-        fwmark         => $fwmark,
-        table          => $table,
-        peers          => $peers.map |$key, $value| {
+        private_key => $private_key,
+        listen_port => $listen_port,
+        address     => $address,
+        save_config => $save_config,
+        dns_servers => $dns_servers,
+        preup       => $preup_command,
+        postup      => $postup_command,
+        predown     => $predown_command,
+        postdown    => $postdown_command,
+        mtu         => $mtu,
+        fwmark      => $fwmark,
+        table       => $table,
+        peers       => $peers.map |$key, $value| {
           {
             'public_key'           => $value['public_key'],
             'endpoint'             => $value['endpoint'],

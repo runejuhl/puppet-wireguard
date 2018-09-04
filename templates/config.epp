@@ -1,15 +1,15 @@
-<%- | String $private_key,
-      Integer $listen_port,
-      String $address,
-      Boolean $save_config,
-      Optional[String] $dns_servers,
+<%- | String            $private_key,
+      Integer           $listen_port,
+      String            $address,
+      Boolean           $save_config,
+      Optional[String]  $dns_servers,
       Optional[String]  $preup,
       Optional[String]  $postup,
       Optional[String]  $predown,
       Optional[String]  $postdown,
-      Optional[Integer]  $mtu,
-      Optional[Integer]  $fwmark = undef,
-      Optional[String]   $table = undef,
+      Optional[Integer] $mtu,
+      Optional[Integer] $fwmark = undef,
+      Optional[String]  $table  = undef,
       Array[Struct[
         {
           public_key           => String,
@@ -19,7 +19,7 @@
           comment              => Optional[String],
           persistent_keepalive => Optional[Integer[0-65535]],
         }
-      ]] $peers = []
+      ]]                $peers  = []
 | -%>
 
 [Interface]
