@@ -1,14 +1,16 @@
-[![Build Status](https://travis-ci.com/IainDouglas/puppet-wireguard.svg?branch=master)](https://travis-ci.com/IainDouglas/puppet-wireguard)
 # puppet-wireguard
 
-This module manages wireguard tunnels see https://www.wireguard.com/ and man wg(8)
-for details.
+This module manages wireguard tunnels see https://www.wireguard.com/ and man
+wg(8) for details.
+
+This fork is based on
+[flokli-wireguard](https://github.com/flokli/puppet-wireguard) with changes from
+[IainDouglas/puppet-wireguard](https://github.com/IainDouglas/puppet-wireguard).
 
 ## Supported distributions
  - Debian (Jessie and later)
- - Ubuntu (Trusty, Xenial and later)
- - CentOS/RedHat etc ( Version 7 and later)
- - Archlinux
+ - Ubuntu (Xenial and later)
+ - CentOS/RedHat etc (Version 7 and later)
 
 ## General
  The module
@@ -58,6 +60,13 @@ wireguard::simple_tunnels:
     address: '192.0.2.1/24'
     peer_public_key: 'Z-G/H8Fg+nUnLtaTgfDBsBi0ma08nfIi96t4zMPnZCc='
     ensure: 'present'
-    peer_allowed_ips: '0.0.0.0/0'
+    peer_allowed_ips:
+      - '0.0.0.0/0'
     peer_endpoint: 'example.com:58886'
 ```
+
+### Contributors
+
++ [Florian Klink](https://github.com/flokli)
++ [Iain Douglas](https://github.com/IainDouglas)
++ [Rune Juhl Jacobsen](https://github.com/runejuhl)

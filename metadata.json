@@ -1,12 +1,18 @@
 {
-  "name": "flokli-wireguard",
-  "version": "0.1.0",
-  "author": "Florian Klink",
-  "summary": "Install and manage WireGuard tunnels",
+  "name": "runejuhl-wireguard",
+  "version": "0.2.0",
+  "author": "Rune Juhl Jacobsen",
+  "summary": "Install and manage WireGuard tunnels. Based on flokli-wireguard and changes by aequitas.",
   "license": "MIT",
-  "source": "https://github.com/flokli/puppet-wireguard.git",
-  "project_page": "https://github.com/flokli/puppet-wireguard",
-  "issues_url": "https://github.com/flokli/puppet-wireguard/issues",
+  "source": "https://github.com/runejuhl/puppet-wireguard.git",
+  "project_page": "https://github.com/runejuhl/puppet-wireguard",
+  "issues_url": "https://github.com/runejuhl/puppet-wireguard/issues",
+  "tags": [
+    "network",
+    "vpn",
+    "wireguard",
+    "security"
+  ],
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
@@ -26,9 +32,8 @@
     {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
-        "14.04",
         "16.04",
-        "17.04"
+        "18.04"
       ]
     },
     {
@@ -37,9 +42,6 @@
         "8.0",
         "9.0"
       ]
-    },
-    {
-      "operatingsystem": "Archlinux"
     }
   ],
   "requirements": [
