@@ -21,54 +21,54 @@
         }
       ]]                                   $peers  = []
 | -%>
-
 [Interface]
 PrivateKey = <%= $private_key %>
 <% if $listen_port { -%>
 ListenPort = <%= $listen_port %>
 <%} -%>
-Address = <%= $address %>
+Address    = <%= $address %>
 <% if $save_config { -%>
 SaveConfig = <%= $save_config %>
 <%} -%>
 <% if $dns_servers { -%>
-DNS = <%= $dns_servers.join(', ') %>
+DNS        = <%= $dns_servers.join(', ') %>
 <%} -%>
 <% if $preup { -%>
-PreUp = <%= $preup %>
+PreUp      = <%= $preup %>
 <%} -%>
 <% if $postup { -%>
-postUp = <%= $postup %>
+postUp     = <%= $postup %>
 <%} -%>
 <% if $predown { -%>
-PreDown = <%= $predown%>
+PreDown    = <%= $predown%>
 <%} -%>
 <% if $postdown { -%>
-PostDown = <%= $postdown %>
+PostDown   = <%= $postdown %>
 <%} -%>
 <% if $mtu { -%>
-mtu = <%= $mtu %>
+mtu        = <%= $mtu %>
 <%} -%>
 <% if $table { -%>
-table = <%= $table %>
+table      = <%= $table %>
 <%} -%>
 <% if $fwmark { -%>
-fwmark = <%= $fwmark %>
+fwmark     = <%= $fwmark %>
 <%} -%>
 <% $peers.each |$peer| { -%>
+
 [Peer]
 <% if $peer['comment'] { -%>
-#<%= $peer['comment'] %>
+# <%= $peer['comment'] %>
 <% } -%>
-PublicKey = <%= $peer['public_key'] %>
+PublicKey           = <%= $peer['public_key'] %>
 <% if $peer['preshared_key'] { -%>
-PresharedKey = <%= $peer['preshared_key'] %>
+PresharedKey        = <%= $peer['preshared_key'] %>
 <% } -%>
-AllowedIPs = <%= $peer['allowed_ips'].join(', ') %>
+AllowedIPs          = <%= $peer['allowed_ips'].join(', ') %>
 <% if $peer['endpoint'] { -%>
-Endpoint = <%= $peer['endpoint'] %>
+Endpoint            = <%= $peer['endpoint'] %>
 <% } -%>
 <% if $peer['persistent_keepalive'] { -%>
 PersistentKeepalive = <%= $peer['persistent_keepalive'] %>
 <% } -%>
-<% } %>
+<% } -%>
