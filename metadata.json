@@ -23,7 +23,7 @@
       "version_requirement": ">= 4.0.0"
     },
     {
-      "name": "voxpupuli/tea",
+      "name": "puppet/tea",
       "version_requirement": ">= 1.0.0"
     }
   ],
