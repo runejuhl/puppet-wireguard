@@ -1,6 +1,6 @@
 {
   "name": "runejuhl-wireguard",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "Rune Juhl Jacobsen",
   "summary": "Install and manage WireGuard tunnels. Based on flokli-wireguard and changes by aequitas.",
   "license": "MIT",
