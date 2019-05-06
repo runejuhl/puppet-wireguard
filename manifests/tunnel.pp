@@ -83,7 +83,7 @@
 define wireguard::tunnel (
   Wireguard::Base64                    $private_key,
   Stdlib::Host                         $address,
-  Optional[Tea::Port]                  $listen_port      = undef,
+  Optional[Stdlib::Port]               $listen_port      = undef,
   Optional[Array[Stdlib::IP::Address]] $dns_servers      = undef,
   Optional[String]                     $preup_command    = undef,
   Optional[String]                     $postup_command   = undef,

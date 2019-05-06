@@ -19,7 +19,7 @@
 
 define wireguard::simple_tunnel (
   Wireguard::Base64                $private_key,
-  Tea::Port                        $listen_port,
+  Stdlib::Port                     $listen_port,
   Wireguard::Base64                $peer_public_key,
   Enum['present','absent']         $ensure           = 'present',
   Optional[Stdlib::Host]           $address          = undef,

@@ -1,7 +1,7 @@
 <%- | Wireguard::Base64                    $private_key,
       Stdlib::Host                         $address,
       Boolean                              $save_config,
-      Optional[Tea::Port]                  $listen_port,
+      Optional[Stdlib::Port]               $listen_port,
       Optional[Array[Stdlib::IP::Address]] $dns_servers,
       Optional[String]                     $preup,
       Optional[String]                     $postup,

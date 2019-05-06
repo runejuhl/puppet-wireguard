@@ -1,6 +1,6 @@
 {
   "name": "runejuhl-wireguard",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "Rune Juhl Jacobsen",
   "summary": "Install and manage WireGuard tunnels. Based on flokli-wireguard and changes by aequitas.",
   "license": "MIT",
@@ -16,15 +16,11 @@
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
-      "version_requirement": ">= 4.1.0"
+      "version_requirement": ">= 5.2.0"
     },
     {
       "name": "puppetlabs/apt",
       "version_requirement": ">= 4.0.0"
-    },
-    {
-      "name": "puppet/tea",
-      "version_requirement": ">= 1.0.0"
     }
   ],
   "data_provider": null,
@@ -41,6 +37,12 @@
       "operatingsystemrelease": [
         "8.0",
         "9.0"
+      ]
+    },
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "7"
       ]
     }
   ],
