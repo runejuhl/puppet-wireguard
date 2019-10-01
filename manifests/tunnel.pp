@@ -93,7 +93,7 @@ define wireguard::tunnel (
   Optional[Integer]                    $fwmark           = undef,
   Optional[String]                     $table            = undef,
   Boolean                              $save_config      = false,
-  Enum['present','absent']             $ensure           = 'present',
+  Boolean                              $ensure           = true,
   Hash[String, Struct[
     {
       public_key           => Wireguard::Base64,
@@ -144,17 +144,18 @@ define wireguard::tunnel (
           }
         },
       }),
-                    notify  => Service["wg-quick@${title}.service"],
-                    }
-                    service { "wg-quick@${title}.service":
-                    ensure  => if $ensure { 'running' } else { 'stopped' },
-                    enable  => if $ensure { true } else { false },
-                    require => File["/etc/wireguard/${title}.conf"],
-                    }
+      notify  => Service["wg-quick@${title}.service"],
+    }
+
+    service { "wg-quick@${title}.service":
+      ensure  => if $ensure { 'running' } else { 'stopped' },
+      enable  => $ensure,
+      require => File["/etc/wireguard/${title}.conf"],
+    }
   }
   else {
     file { "/etc/wireguard/${title}.conf":
-      ensure  => $ensure,
+      ensure  => if $ensure { 'present' } else { 'absent' },
     }
   }
 }
