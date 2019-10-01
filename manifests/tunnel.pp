@@ -149,7 +149,7 @@ define wireguard::tunnel (
 
     service { "wg-quick@${title}.service":
       ensure  => if $ensure { 'running' } else { 'stopped' },
-      enable  => if $ensure { true } else { false },
+      enable  => $ensure,
       require => File["/etc/wireguard/${title}.conf"],
     }
   }
