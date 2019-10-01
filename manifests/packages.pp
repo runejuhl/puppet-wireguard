@@ -16,7 +16,7 @@ class wireguard::packages (
 
       case $osname {
         'ubuntu' : {
-          $_osname = downcase($osname)
+          $_osname = $osname.downcase
           apt::source { 'wireguard' :
             location => "http://ppa.launchpad.net/wireguard/wireguard/${_osname}",
             release  => $facts['lsbdistcodename'],

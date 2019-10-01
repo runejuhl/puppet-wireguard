@@ -93,7 +93,7 @@ define wireguard::tunnel (
   Optional[Integer]                    $fwmark           = undef,
   Optional[String]                     $table            = undef,
   Boolean                              $save_config      = false,
-  Enum['present','absent']             $ensure           = 'present',
+  Boolean                              $ensure           = true,
   Hash[String, Struct[
     {
       public_key           => Wireguard::Base64,
@@ -155,7 +155,7 @@ define wireguard::tunnel (
   }
   else {
     file { "/etc/wireguard/${title}.conf":
-      ensure  => $ensure,
+      ensure  => if $ensure { 'present' } else { 'absent' },
     }
   }
 }
