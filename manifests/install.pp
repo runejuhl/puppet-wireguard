@@ -28,7 +28,6 @@ class wireguard::install (
       }
       'Ubuntu': {
         include apt
-        apt::ppa { $repo_url: }
       }
       'Debian': {
         include apt
@@ -56,7 +55,6 @@ class wireguard::install (
     }
     'Ubuntu': {
       $_require = $manage_repo ? {
-        true    => Apt::Ppa[$repo_url],
         default => undef,
       }
     }
